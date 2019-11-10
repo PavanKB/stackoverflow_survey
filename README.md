@@ -1,5 +1,22 @@
 # Stackoverflow Survey 2017
 
+Summary:
+
+3) Create a Jupyter Notebook, using any associated packages you'd like, to:
+
+Prepare data:
+
+Gather necessary data to answer your questions
+Handle categorical and missing data
+Provide insight into the methods you chose and why you chose them
+Analyze, Model, and Visualize
+
+Provide a clear connection between your business questions and how the data answers them.
+4) Communicate your business insights:
+
+Create a Github repository to share your code and data wrangling/modeling techniques, with a technical audience in mind
+Create a blog post to share your questions and insights with a non-technical audience
+
 Source: https://www.kaggle.com/stackoverflow/so-survey-2017
 
 Other: https://www.kaggle.com/stackoverflow/stack-overflow-2018-developer-survey
@@ -11,6 +28,7 @@ Other: https://www.kaggle.com/stackoverflow/stack-overflow-2018-developer-survey
 1. Modeling
 1. Evaluation
 1. Deployment
+
 
 # Exploratory Data Analysis  (EDA)
 1. Find the number of NA per col
@@ -34,6 +52,7 @@ Other: https://www.kaggle.com/stackoverflow/stack-overflow-2018-developer-survey
 * University
 * FormalEducation
 * MajorUndergrad
+These can be checked by correlation?
 
 
 ### Numbers
@@ -46,6 +65,15 @@ Other: https://www.kaggle.com/stackoverflow/stack-overflow-2018-developer-survey
 
 ### TO REMOVE:
 * PronounceGIF
+* ClickyKeys
+* TabsSpaces
+* AuditoryEnvironment
+* Race
+* SurveyLong
+* QuestionsInteresting
+* QuestionsConfusing
+* InterestedAnswers
+
 
 
 # Imputation
@@ -65,3 +93,5 @@ Other: https://www.kaggle.com/stackoverflow/stack-overflow-2018-developer-survey
 1. Regression?
 1. Decision trees?
 1. Clustering?
+
+
