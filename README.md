@@ -1,5 +1,6 @@
 # Stackoverflow Survey 2017
-
+2) Pose at least three questions related to business or 
+real-world application of how the data could be used
 Summary:
 
 3) Create a Jupyter Notebook, using any associated packages you'd like, to:
@@ -18,8 +19,6 @@ Create a Github repository to share your code and data wrangling/modeling techni
 Create a blog post to share your questions and insights with a non-technical audience
 
 Source: https://www.kaggle.com/stackoverflow/so-survey-2017
-
-Other: https://www.kaggle.com/stackoverflow/stack-overflow-2018-developer-survey
 
 ## CRISP-DM
 1. Business understanding
@@ -95,3 +94,13 @@ These can be checked by correlation?
 1. Clustering?
 
 
+# References:
+https://github.com/plotly/plotly.py#jupyterlab-support-python-35
+
+
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfTransformer
+
+
+from sklearn.naive_bayes import MultinomialNB
+clf = MultinomialNB().fit(X_train_tfidf, twenty_train.target)
