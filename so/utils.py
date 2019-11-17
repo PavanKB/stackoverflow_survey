@@ -105,11 +105,3 @@ def one_hot_encode(df, index_col, value_col, sep, add_col_prefix=False):
     split_df.index = df.index
 
     return split_df
-
-
-if __name__ == '__main__':
-    df = pd.DataFrame({'index': [0, 1, 2, 4], 'val': ['a;b;c', 'd', pd.np.NaN, '']},
-                      index=[10, 20, 30, 40]
-                      )
-    print(one_hot_encode(df, None, 'val', sep=';'))
-    print(one_hot_encode(df, 'index', 'val', sep=';'))

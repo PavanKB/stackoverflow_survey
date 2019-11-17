@@ -3,6 +3,12 @@ import seaborn as sns
 import networkx as nx
 from itertools import combinations
 from collections import Counter
+import holoviews as hv
+from holoviews import opts, dim
+import colorcet
+import pandas as pd
+
+hv.extension('bokeh')
 
 
 def plot_data_dist_grid(data, col_idx, n_col=4, n_row=4, order=None):
@@ -43,7 +49,7 @@ def plot_col_dist(df, col_idx, order=None, sort=True, rotation=90, fig_size=(10,
     :param df: The data frame to analyse
     :param col_idx: The column name to analyse
     :param order: A list specifying the x-axis order
-    :param sort: Should the plot be sorted in descending order?
+    :param sort: Should the plot be sorted in descending order? Ignored if order is specified
     :param rotation: rotation of x-axis labels
     :param fig_size: Figure size
     :param ax: matplotlib Axes
@@ -53,7 +59,7 @@ def plot_col_dist(df, col_idx, order=None, sort=True, rotation=90, fig_size=(10,
     # Create the subplot to host the plots.
     fig, ax = plt.subplots(figsize=fig_size)
 
-    if sort:
+    if not order and sort:
         order = df[col_idx].value_counts().index
 
     g = sns.countplot(data=df, x=col_idx, order=order, ax=ax)
@@ -64,7 +70,7 @@ def plot_col_dist(df, col_idx, order=None, sort=True, rotation=90, fig_size=(10,
         g.set_title(title)
 
 
-def plot_network_graph(df, col_idx, sep="; ", fig_size=(15, 15)):
+def plot_network_graph(df, col_idx, sep="; ", fig_size=(15, 15), pos_type='spring'):
     """
     Creates a network graph of the variables in multiple options response.
     These are usually stored as '; ' seperated value in each row.
@@ -72,9 +78,10 @@ def plot_network_graph(df, col_idx, sep="; ", fig_size=(15, 15)):
     reference: Aric Hagberg (hagberg@lanl.gov)
     :param df: dataframe to analyse
     :param col_idx: The column name
-    :param sep: Seperator to use to split the column value
+    :param sep: Separator to use to split the column value
     :param fig_size: Size of the figure
-    :return:
+    :param pos_type: The layout of the nodes in plot : spring or shell
+    :return: network plot
     """
     plot_df = df[[col_idx]].dropna()
     plot_df[col_idx] = plot_df[col_idx].str.split(sep)
@@ -101,7 +108,10 @@ def plot_network_graph(df, col_idx, sep="; ", fig_size=(15, 15)):
     for e, w in edge_wts.items():
         G.add_edges_from([e], weight=w/max_wt_edge)
 
-    pos = nx.spring_layout(G)  # Set the node dit
+    if pos_type == 'spring':
+        pos = nx.spring_layout(G)
+    else:
+        pos = nx.shell_layout(G)
 
     plt.figure(figsize=fig_size)
 
@@ -136,3 +146,60 @@ def plot_network_graph(df, col_idx, sep="; ", fig_size=(15, 15)):
 
     plt.axis('off')
     plt.show()
+
+
+def plot_chord_graph(df, col_idx, sep="; ", height=800, width=800, top_n=None, cmap='glasbey_light'):
+    """
+    Plots a chord plot for the different categories
+    Reference: https://holoviews.org/gallery/demos/bokeh/route_chord.html
+
+    :param df: dataframe to analyse
+    :param col_idx: The column name
+    :param sep: Separator to use to split the column value
+    :param height: height of the final image
+    :param width: width of the final image
+    :param top_n: Plot only top n nodes (optional)
+    :param cmap: Colour scheme for the graph
+    :return:
+    """
+    plot_df = df[[col_idx]].dropna()
+    plot_df[col_idx] = plot_df[col_idx].str.split(sep)
+
+    # Get the nodes and node weights
+    nodes = [x for l in plot_df[col_idx] for x in l]
+    node_wts = Counter(nodes)
+    nodes_df = pd.DataFrame({'Key': list(node_wts.keys()),
+                             'Count': list(node_wts.values())})
+    nodes_df.sort_values('Count', inplace=True, ascending=False)
+    nodes_df['ID'] = [i for i in range(0, nodes_df.shape[0])]
+
+    nodes = hv.Dataset(nodes_df, 'ID', 'Key')
+
+    # Get the edges
+    edges = plot_df[col_idx].apply(lambda x: [(*sorted(c),) for c in combinations(x, 2)])
+    edges = [edge for row in edges for edge in row]
+    edge_wts = Counter(edges)
+
+    edges_df = pd.DataFrame({'Source_Dest': list(edge_wts.keys()),
+                             'Count': list(edge_wts.values())})
+    edges_df.sort_values('Count', inplace=True, ascending=False)
+    edges_df[['Source', 'Dest']] = pd.DataFrame(edges_df['Source_Dest'].tolist(), index=edges_df.index)
+
+    edges_df = edges_df.merge(nodes_df[['Key', 'ID']], left_on=["Source"], right_on=["Key"])
+    edges_df = edges_df.merge(nodes_df[['Key', 'ID']], left_on=["Dest"], right_on=["Key"])
+    edges_df.rename(columns={'ID_x': 'Source_ID', 'ID_y': 'Dest_ID'}, inplace=True)
+
+    chord = hv.Chord((edges_df, nodes), ['Source_ID', 'Dest_ID'], ['Count'])
+
+    if top_n:
+        most_used_lang = chord.select(ID=list(nodes_df.iloc[:top_n]['ID']), selection_mode='nodes')
+    else:
+        most_used_lang = chord.select(ID=nodes_df['ID'].tolist(), selection_mode='nodes')
+
+    most_used_lang.opts(
+        opts.Chord(cmap=cmap, edge_color=dim('Source_ID').str(),
+                   height=height, width=width, labels='Key', node_color=dim('ID').str())
+    )
+
+    return most_used_lang
+
