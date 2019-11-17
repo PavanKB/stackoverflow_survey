@@ -1,106 +1,30 @@
-# Stackoverflow Survey 2017
-2) Pose at least three questions related to business or 
-real-world application of how the data could be used
-Summary:
+# StackOverflow Survey Analysis
 
-3) Create a Jupyter Notebook, using any associated packages you'd like, to:
-
-Prepare data:
-
-Gather necessary data to answer your questions
-Handle categorical and missing data
-Provide insight into the methods you chose and why you chose them
-Analyze, Model, and Visualize
-
-Provide a clear connection between your business questions and how the data answers them.
-4) Communicate your business insights:
-
-Create a Github repository to share your code and data wrangling/modeling techniques, with a technical audience in mind
-Create a blog post to share your questions and insights with a non-technical audience
+This code base is meant to perform the EDA of the StackOverflow survey data.
 
 Source: https://www.kaggle.com/stackoverflow/so-survey-2017
 
-## CRISP-DM
-1. Business understanding
-1. Data Understanding
-1. Prepare Data
-1. Modeling
-1. Evaluation
-1. Deployment
+The repository is organised as below:
 
+## so-survey-2017
+1. **cty.csv**: The ISO codes for the countries in the data. Used for `choropleth` plot 
+1. **survey_meta.csv**: additional meta data that was manually added after browsing the data.
 
-# Exploratory Data Analysis  (EDA)
-1. Find the number of NA per col
-1. Find the number of NA per row
-1. Find the count per unique value - to see distrubution
-1. Plot on map
+## so
+Contains the python scripts that used for extracting and manipulation data and for plotting. 
 
+**Plotting**
+* plot_data_dist_grid
+* plot_col_dist
+* plot_network_graph
+* plot_chord_graph 
 
+**Utils**
+* get_col_unique_val
+* get_na_summary
+* split_col_to_df_old
+* one_hot_encode
 
-# Clean data
-1. Convert dates
-1. Create the categorical cols
-1. Split columns by ;
+## data_exploration.ipynb
+This is the jupyter python notebook that summarises the EDA of the stack_overflow 2017 dataset.  
 
-### split with ;
-* DeveloperType  
-* MobileDeveloperType
-* NonDeveloperType
-
-### Similar columns
-* University
-* FormalEducation
-* MajorUndergrad
-These can be checked by correlation?
-
-
-### Numbers
-* CareerSatisfaction
-* JobSatisfaction
-* HoursPerWeek
-* StackOverflowSatisfaction
-* Salary
-* ExpectedSalary
-
-### TO REMOVE:
-* PronounceGIF
-* ClickyKeys
-* TabsSpaces
-* AuditoryEnvironment
-* Race
-* SurveyLong
-* QuestionsInteresting
-* QuestionsConfusing
-* InterestedAnswers
-
-
-
-# Imputation
-
-
-
-# Business Case:
- 
-1. Salary recommendation engine?
-* Which of the developers need to re-negotiate the salary up?
-1. Industry recommendation engine?
-* Skills set clustering
-  
-
-# Split as test 
-
-1. Regression?
-1. Decision trees?
-1. Clustering?
-
-
-# References:
-https://github.com/plotly/plotly.py#jupyterlab-support-python-35
-
-
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.feature_extraction.text import TfidfTransformer
-
-
-from sklearn.naive_bayes import MultinomialNB
-clf = MultinomialNB().fit(X_train_tfidf, twenty_train.target)
