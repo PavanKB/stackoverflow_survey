@@ -108,3 +108,13 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+data/2011 Stack Overflow Survey Results.zip
+data/2012 Stack Overflow Survey Results.zip
+data/2013 Stack Overflow Survey Responses.zip
+data/2014 Stack Overflow Survey Responses.zip
+data/2015 Stack Overflow Developer Survey Responses.zip
+data/2016 Stack Overflow Survey Results.zip
+data/developer_survey_2017.zip
+data/developer_survey_2018.zip
+data/developer_survey_2019.zip
+

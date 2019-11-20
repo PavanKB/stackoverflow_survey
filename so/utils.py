@@ -4,7 +4,7 @@ import pandas as pd
 def get_col_unique_val(df):
     """
     Extracts the unique values per column in df and returns them as dict.
-    This also takes care of the cases where multiple values are stored as ; seperated strings.
+    This also takes care of the cases where multiple values are stored as ; separated strings.
     key:column name, value:list of unique values.
     """
     unique_vals = {}
@@ -79,10 +79,10 @@ def one_hot_encode(df, index_col, value_col, sep, add_col_prefix=False):
     2, d           2, NA, NA, NA, 1
 
     https://stackoverflow.com/a/56299184/6931113
-    :param df:
-    :param index_col:
-    :param value_col:
-    :param sep:
+    :param df: Dataframe to analyse
+    :param index_col: Column to use as primary key
+    :param value_col: Column to split and perform the one hot encode
+    :param sep: Separator to use for split
     :param add_col_prefix:
     :return:
 

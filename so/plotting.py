@@ -7,6 +7,7 @@ import holoviews as hv
 from holoviews import opts, dim
 import colorcet
 import pandas as pd
+import plotly.graph_objects as go
 
 hv.extension('bokeh')
 
@@ -203,3 +204,59 @@ def plot_chord_graph(df, col_idx, sep="; ", height=800, width=800, top_n=None, c
 
     return most_used_lang
 
+
+def plot_facet(df, col, var, height=5, col_wrap=5):
+    """
+    Plots a facet graph
+    :param df: data frame to plot.
+    :param col: Col whose values determine the set plot sections
+    :param var: var col name
+    :param height: height of the plot
+    :param col_wrap: Number cols/plot after which facet will wrap to next line
+    :return:
+    """
+    g = sns.FacetGrid(data=df, col=col, height=height, col_wrap=col_wrap)
+    g = g.map(plt.hist, var)
+    for ax in g.axes.flat:
+        for label in ax.get_xticklabels():
+            label.set_rotation(90)
+
+
+def plot_choropleth(df, col_idx, title='', location_mode='ISO-3', color_scale='Blues',
+                    geo_scope='world', height=800, width=1400):
+    """
+    Generates the choropleth plot. The country is identified using data from column
+    `country_code`
+    :param df: data frame to plot.
+    :param col_idx: The column ti use as primary key
+    :param title: Title of the plot
+    :param location_mode: Location mode
+    :param color_scale: colour scale to use
+    :param geo_scope: geo scope
+    :param height: Height of the plot
+    :param width: width of the plot
+    :return:
+    """
+
+    fig = go.Figure(
+        data=go.Choropleth(
+            locations=df['country_code'],  # Spatial coordinates
+            z=df[col_idx].astype(float),  # Data to be color-coded
+            locationmode=location_mode,  # set of locations match entries in `locations`
+            colorscale=color_scale,
+            reversescale=False,
+        )
+    )
+
+    fig.update_layout(
+        title_text=title,
+        geo_scope=geo_scope,
+        geo=dict(
+            showframe=False,
+            showcoastlines=False
+        ),
+        width=width,
+        height=height
+    )
+
+    fig.show()
